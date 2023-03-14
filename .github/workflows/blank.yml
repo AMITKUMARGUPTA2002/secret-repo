@@ -17,7 +17,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v2
       with:
-        go-version: latest
+        go-version: 1.17.5
     - name: Install Subfinder
       run: |
         go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
