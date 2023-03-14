@@ -1,0 +1,34 @@
+name: Recon Automation
+on:
+  push:
+    branches: [main]
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y amass nmap subfinder
+
+    - name: Subdomain Enumeration
+      run: |
+        subfinder -d apple.com -o domains.txt
+        amass enum -d apple.com -o domains.txt
+
+    - name: Port Scanning
+      run: nmap -iL domains.txt -p- -sS -T4 -oN ports.txt
+
+    - name: HTTP Enumeration
+      run: |
+        cat domains.txt | httpx -title -status-code -content-length -web-server -tech-detect -o results.txt
+
+    - name: Save results
+      uses: actions/upload-artifact@v2
+      with:
+        name: Recon results
+        path: results.txt ports.txt domains.txt
