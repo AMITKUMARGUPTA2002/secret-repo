@@ -16,6 +16,9 @@ jobs:
       with:
         go-version: 1.16
     - name: Install Amass
-      run: go install -v github.com/OWASP/Amass/v3/...@master
+      run: wget https://github.com/OWASP/Amass/releases/download/v3.15.4/amass_linux_amd64.zip
+      run: unzip amass_linux_amd64.zip
+      run: sudo mv amass_linux_amd64/amass /usr/local/bin/
+
     - name: Run Amass
       run: amass enum -d example.com
