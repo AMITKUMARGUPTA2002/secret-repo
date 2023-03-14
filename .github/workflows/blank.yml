@@ -10,9 +10,9 @@ env:
 
 jobs:
   recon:
+    runs-on: ubuntu-latest
     env:
       DOMAIN: ${{ env.DOMAIN }}
-    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -22,12 +22,12 @@ jobs:
         go-version: 1.16
     - name: Install Subfinder
       run: |
-        go get -u github.com/projectdiscovery/subfinder/v2/cmd/subfinder
+        go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
         subfinder --version
     - name: Run Subfinder
       run: |
         echo "Target: $DOMAIN"
-        subfinder -d $DOMAIN > subfinder_output.txt
+        subfinder -d $DOMAIN -o subfinder_output.txt
     - name: Save results
       uses: actions/upload-artifact@v2
       with:
