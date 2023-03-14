@@ -9,19 +9,20 @@ env:
 
 jobs:
   recon:
-  env:
-    DOMAIN: ${{ env.DOMAIN }}
     runs-on: ubuntu-latest
+    env:
+      DOMAIN: ${{ env.DOMAIN }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Display domain
+      run: echo "Scanning $DOMAIN"
     - name: Install Amass
       run: |
         sudo snap install amass
         sudo snap refresh amass
     - name: Run Amass
       run: |
-        echo "Target: $DOMAIN"
         amass enum -d $DOMAIN -o amass_output.txt
     - name: Save results
       uses: actions/upload-artifact@v2
