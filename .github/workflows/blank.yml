@@ -1,17 +1,32 @@
 name: Recon Automation
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    
-    - name: Subdomain Enumeration
+    - name: Install dependencies
       run: |
-        echo "Testing" > results.txt
+        go get github.com/projectdiscovery/subfinder/cmd/subfinder
+        go get github.com/tomnomnom/assetfinder
+        go get -v github.com/projectdiscovery/httpx/cmd/httpx
+        go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
 
-    - name: Save results
+    - name: Perform Recon
+      run: |
+        subfinder -d example.com -o domains.txt;
+        assetfinder example.com | tee -a domains.txt;
+        httpx -l domains.txt -o hosts.txt;
+        nuclei -l hosts.txt -t ~/nuclei-templates -o results.txt;
+    
+    - name: Upload results
       uses: actions/upload-artifact@v2
       with:
         name: Recon results
-        path: results.txt 
+        path: results.txt hosts.txt domains.txt
