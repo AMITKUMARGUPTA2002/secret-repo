@@ -6,13 +6,13 @@ on:
     branches: [ main ]
 
 env:
-  DOMAIN: 'example.com'
+  DOMAIN: 'sharda.ac.in'
 
 jobs:
   recon:
+    runs-on: ubuntu-latest
     env:
       DOMAIN: ${{ env.DOMAIN }}
-    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
