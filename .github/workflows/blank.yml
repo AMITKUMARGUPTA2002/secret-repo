@@ -1,4 +1,4 @@
-name: Recon Automation 
+name: Recon + Vuln Scanner Automation 
 on:
   push:
     branches: [ main ]
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  DOMAIN: 'immunefiles.com'
+  DOMAIN: 'upstox.com'
 
 jobs:
   recon:
@@ -25,7 +25,7 @@ jobs:
         go install github.com/tomnomnom/waybackurls@latest
         go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
       shell: bash
-    - name: Run Subfinder
+    - name: Recon + Vuln Scanning 
       run: |
         echo "Target: $DOMAIN"
         subfinder -d $DOMAIN -o subfinder_output.txt 
@@ -37,4 +37,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Recon results
-        path: subfinder_output.txt httpx_result.txt endpoints.txt vulnscanner.txt
+        path: subfinder_output.txt | httpx_result.txt | endpoints.txt | vulnscanner.txt
