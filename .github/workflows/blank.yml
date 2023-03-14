@@ -17,7 +17,13 @@ jobs:
         go-version: 1.16
     - name: Install Amass
       run: |
-        wget https://github.com/OWASP/Amass/releases/download/v3.15.4/amass_linux_amd64.zip 
-        unzip amass_linux_amd64.zip
+        echo "test" | tee -a sample.txt
+
     - name: sample output
       run: ls | tee -a ls.txt 
+
+    - name: Save results
+      uses: actions/upload-artifact@v2
+      with:
+        name: Recon results
+        path: ls.txt sample.txt
