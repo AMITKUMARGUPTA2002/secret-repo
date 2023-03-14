@@ -1,28 +1,31 @@
 name: Recon Automation with Sublist3r
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-env:
-  DOMAIN: 'sharda.ac.in'
 
 jobs:
   recon:
     runs-on: ubuntu-latest
+    env:
+      DOMAIN: sharda.ac.in
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Install Sublist3r
       run: |
         sudo apt-get update
-        sudo apt-get -y install python3 python3-pip
-        sudo pip3 install requests argparse dnspython
-        git clone https://github.com/aboul3la/Sublist3r.git ~/Sublist3r
+        sudo apt-get install -y sublist3r
     - name: Run Sublist3r
       run: |
         echo "Target: $DOMAIN"
-        python3 ~/Sublist3r/sublist3r.py -d $DOMAIN -o sublist3r_output.txt
+        sublist3r -d $DOMAIN -o sublist3r_output.txt
+      shell: bash
+    - name: Wait for Sublist3r to complete
+      run: |
+        while pgrep sublist3r > /dev/null; do sleep 5; done
     - name: Save results
       uses: actions/upload-artifact@v2
       with:
