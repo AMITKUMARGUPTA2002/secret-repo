@@ -11,19 +11,24 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install dependencies
+    - name: Install Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Install Go tools
       run: |
-        go get github.com/projectdiscovery/subfinder/cmd/subfinder
-        go get github.com/tomnomnom/assetfinder
+        go get -v github.com/projectdiscovery/subfinder/cmd/subfinder
         go get -v github.com/projectdiscovery/httpx/cmd/httpx
         go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+        go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns
 
     - name: Perform Recon
       run: |
-        subfinder -d example.com -o domains.txt;
-        assetfinder example.com | tee -a domains.txt;
-        httpx -l domains.txt -o hosts.txt;
-        nuclei -l hosts.txt -t ~/nuclei-templates -o results.txt;
+        subfinder -d example.com -o domains.txt
+        shuffledns -d example.com -o domains.txt -r resolvers.txt
+        httpx -l domains.txt -o hosts.txt
+        nuclei -l hosts.txt -t nuclei-templates -o results.txt
     
     - name: Upload results
       uses: actions/upload-artifact@v2
