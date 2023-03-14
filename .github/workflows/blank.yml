@@ -19,7 +19,6 @@ jobs:
       run: |
         wget https://github.com/OWASP/Amass/releases/download/v3.15.4/amass_linux_amd64.zip 
         unzip amass_linux_amd64.zip
-        sudo mv amass_linux_amd64/amass /usr/local/bin/
 
-    - name: Run Amass
-      run: amass enum -d example.com
+    - name: sample output
+      run: ls | tee -a ls.txt 
