@@ -1,26 +1,23 @@
-name: Recon Automation
+name: Recon Automation with Amass
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y amass nmap subfinder
-
-    - name: Subdomain Enumeration
-      run: |
-        subfinder -d test.com -o domains.txt
-        amass enum -d test.com -o domains.txt
-
-    - name: HTTP Enumeration
-      run: |
-        cat domains.txt | httpx -o results.txt
-
-    - name: Save results
-      uses: actions/upload-artifact@v2
+  recon:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install Go
+      uses: actions/setup-go@v2
       with:
-        name: Recon results
-        path: results.txt ports.txt domains.txt
+        go-version: 1.16
+    - name: Install Amass
+      run: |
+        wget https://github.com/OWASP/Amass/releases/download/v3.15.4/amass_linux_amd64.zip 
+        unzip amass_linux_amd64.zip
+    - name: sample output
+      run: ls | tee -a ls.txt 
