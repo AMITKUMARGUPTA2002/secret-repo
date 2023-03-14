@@ -11,8 +11,6 @@ env:
 jobs:
   recon:
     runs-on: ubuntu-latest
-    env:
-      DOMAIN: ${{ env.DOMAIN }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -28,6 +26,7 @@ jobs:
       run: |
         echo "Target: $DOMAIN"
         subfinder -d $DOMAIN -o subfinder_output.txt
+      shell: bash 
     - name: Save results
       uses: actions/upload-artifact@v2
       with:
