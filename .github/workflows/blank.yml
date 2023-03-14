@@ -11,19 +11,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16
     - name: Install Amass
       run: |
-        echo "test" | tee -a sample.txt
-
-    - name: sample output
-      run: ls | tee -a ls.txt 
-
+        sudo snap install amass
+        sudo snap refresh amass
+    - name: Run Amass
+      run: amass enum -d example.com -o amass_output.txt
     - name: Save results
       uses: actions/upload-artifact@v2
       with:
         name: Recon results
-        path: sample.txt
+        path: amass_output.txt
