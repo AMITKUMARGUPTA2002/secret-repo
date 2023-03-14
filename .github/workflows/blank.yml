@@ -16,6 +16,6 @@ jobs:
       with:
         go-version: 1.16
     - name: Install Amass
-      run: go install github.com/OWASP/Amass/v3/...
+      run: go install -v github.com/OWASP/Amass/v3/...@master
     - name: Run Amass
       run: amass enum -d example.com
