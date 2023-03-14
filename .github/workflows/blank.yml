@@ -1,8 +1,9 @@
-name: Recon Automation
+name: Recon Automation with Amass
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   recon:
@@ -10,28 +11,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Install Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
-
-    - name: Install Go tools
-      run: |
-        go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
-        go get -v github.com/projectdiscovery/httpx/cmd/httpx
-        go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
-        go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns
-
-    - name: Perform Recon
-      run: |
-        subfinder -d example.com -o domains.txt
-        shuffledns -d example.com -o domains.txt -r resolvers.txt
-        httpx -l domains.txt -o hosts.txt
-        nuclei -l hosts.txt -t nuclei-templates -o results.txt
-    
-    - name: Upload results
-      uses: actions/upload-artifact@v2
-      with:
-        name: Recon results
-        path: results.txt hosts.txt domains.txt
+        go-version: 1.16
+    - name: Install Amass
+      run: go install github.com/OWASP/Amass/v3/...
+    - name: Run Amass
+      run: amass enum -d example.com
