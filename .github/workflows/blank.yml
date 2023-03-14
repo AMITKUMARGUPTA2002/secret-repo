@@ -1,31 +1,29 @@
 name: Recon Automation with Amass
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-env:
-  DOMAIN: 'sharda.ac.in'
 
 jobs:
   recon:
     runs-on: ubuntu-latest
     env:
-      DOMAIN: ${{ env.DOMAIN }}
+      DOMAIN: 'sharda.ac.in'
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Display domain
-      run: echo "Scanning $DOMAIN"
-    - name: Install Amass
-      run: |
-        sudo snap install amass
-        sudo snap refresh amass
-    - name: Run Amass
-      run: |
-        amass enum -d $DOMAIN -o amass_output.txt
-    - name: Save results
-      uses: actions/upload-artifact@v2
-      with:
-        name: Recon results
-        path: amass_output.txt
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Amass
+        run: |
+          sudo snap install amass
+          sudo snap refresh amass
+      - name: Run Amass
+        run: |
+          echo "Target: $DOMAIN"
+          amass enum -d $DOMAIN -o amass_output.txt
+      - name: Save results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Recon results
+          path: amass_output.txt
