@@ -12,8 +12,8 @@ jobs:
 
     - name: Subdomain Enumeration
       run: |
-        subfinder -d apple.com -o domains.txt
-        amass enum -d apple.com -o domains.txt
+        subfinder -d test.com -o domains.txt
+        amass enum -d test.com -o domains.txt
 
     - name: HTTP Enumeration
       run: |
