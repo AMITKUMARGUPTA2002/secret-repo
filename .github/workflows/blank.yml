@@ -1,4 +1,4 @@
-name: Recon Automation with Subfinder
+name: Recon Automation 
 on:
   push:
     branches: [ main ]
@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  DOMAIN: 'sharda.ac.in'
+  DOMAIN: 'immunefiles.com'
 
 jobs:
   recon:
@@ -18,18 +18,23 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.19 
-    - name: Install Subfinder
+    - name: Install Required Tools 
       run: |
         go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        subfinder --version
+        go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+        go install github.com/tomnomnom/waybackurls@latest
+        go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
       shell: bash
     - name: Run Subfinder
       run: |
         echo "Target: $DOMAIN"
-        subfinder -d $DOMAIN -o subfinder_output.txt
+        subfinder -d $DOMAIN -o subfinder_output.txt 
+        cat subfinder_output.txt | httpx -o httpx_result.txt 
+        cat httpx_result.txt | waybackurls | tee -a endpoints.txt
+        cat endpoints.txt | nuclei -es info | tee -a vulnscanner.txt
       shell: bash 
     - name: Save results
       uses: actions/upload-artifact@v2
       with:
         name: Recon results
-        path: subfinder_output.txt
+        path: subfinder_output.txt httpx_result.txt endpoints.txt vulnscanner.txt
