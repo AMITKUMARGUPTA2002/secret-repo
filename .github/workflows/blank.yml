@@ -6,30 +6,28 @@ on:
     branches: [ main ]
 
 env:
-  DOMAIN: 'sharda.ac.in'
+  DOMAIN: "sharda.ac.in"
 
 jobs:
   recon:
     runs-on: ubuntu-latest
-    env:
-      DOMAIN: ${{ env.DOMAIN }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Install Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16
-    - name: Install Subfinder
-      run: |
-        go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
-        subfinder --version
-    - name: Run Subfinder
-      run: |
-        echo "Target: $DOMAIN"
-        subfinder -d $DOMAIN -o subfinder_output.txt
-    - name: Save results
-      uses: actions/upload-artifact@v2
-      with:
-        name: Recon results
-        path: subfinder_output.txt
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: Install Subfinder
+        run: |
+          go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+          subfinder --version
+      - name: Run Subfinder
+        run: |
+          echo "Target: ${{ env.DOMAIN }}"
+          subfinder -d "${{ env.DOMAIN }}" -o subfinder_output.txt
+      - name: Save results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Recon results
+          path: subfinder_output.txt
