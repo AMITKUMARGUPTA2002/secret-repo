@@ -18,7 +18,7 @@ jobs:
 
     - name: Install Go tools
       run: |
-        go get -v github.com/projectdiscovery/subfinder/cmd/subfinder
+        go get -v github.com/projectdiscovery/subfinder/cmd/subfinder@v2.5.6+incompatible
         go get -v github.com/projectdiscovery/httpx/cmd/httpx
         go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
         go get -v github.com/projectdiscovery/shuffledns/cmd/shuffledns
